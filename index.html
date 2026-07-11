@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinTrack – Personal Finance Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="landing-body">
+
+  <!-- NAV -->
+  <nav class="landing-nav">
+    <div class="logo">
+      <div class="logo-icon">💰</div>
+      FinTrack
+    </div>
+    <div class="landing-nav-actions">
+      <a href="login.html"    class="btn btn-outline btn-sm">Log In</a>
+      <a href="register.html" class="btn btn-white   btn-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>✦</span> Your money, under control
+    </div>
+
+    <h1>Manage Your Finances<br /><span>Smarter Every Day</span></h1>
+
+    <p>
+      Track expenses, set savings goals, manage budgets, and plan for the future —
+      all in one clean, distraction-free app.
+    </p>
+
+    <div class="hero-actions">
+      <a href="register.html" class="btn btn-white btn-lg">
+        Start for Free →
+      </a>
+      <a href="login.html" class="btn btn-outline btn-lg">
+        Log In
+      </a>
+    </div>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="check">✓</div>
+        Track Expenses
+      </div>
+      <div class="hero-feature">
+        <div class="check">✓</div>
+        Set Budgets
+      </div>
+      <div class="hero-feature">
+        <div class="check">✓</div>
+        Savings Goals
+      </div>
+      <div class="hero-feature">
+        <div class="check">✓</div>
+        Financial Goals
+      </div>
+      <div class="hero-feature">
+        <div class="check">✓</div>
+        100% Private
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE CARDS -->
+  <section style="background:#fff; padding: 72px 48px;">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 style="font-size:1.9rem; font-weight:800; color:#111827; letter-spacing:-0.5px;">
+          Everything you need in one place
+        </h2>
+        <p style="color:#6b7280; margin-top:10px; font-size:1rem;">
+          No subscriptions. No ads. Your data stays on your device.
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px;">
+        <div class="card" style="border-top:3px solid #2563eb;">
+          <div style="font-size:1.8rem; margin-bottom:14px;">📊</div>
+          <h3 style="font-weight:700; margin-bottom:8px;">Expense Tracking</h3>
+          <p style="color:#6b7280; font-size:0.9rem; line-height:1.6;">
+            Log income and expenses with categories, dates, and notes. Get a clear picture of where your money goes.
+          </p>
+        </div>
+        <div class="card" style="border-top:3px solid #16a34a;">
+          <div style="font-size:1.8rem; margin-bottom:14px;">🏦</div>
+          <h3 style="font-weight:700; margin-bottom:8px;">Savings Accounts</h3>
+          <p style="color:#6b7280; font-size:0.9rem; line-height:1.6;">
+            Create virtual savings pots for different purposes. Deposit and withdraw to track your savings progress.
+          </p>
+        </div>
+        <div class="card" style="border-top:3px solid #d97706;">
+          <div style="font-size:1.8rem; margin-bottom:14px;">📋</div>
+          <h3 style="font-weight:700; margin-bottom:8px;">Budget Control</h3>
+          <p style="color:#6b7280; font-size:0.9rem; line-height:1.6;">
+            Set monthly spending limits per category. Visual alerts warn you before you overspend.
+          </p>
+        </div>
+        <div class="card" style="border-top:3px solid #7c3aed;">
+          <div style="font-size:1.8rem; margin-bottom:14px;">🎯</div>
+          <h3 style="font-weight:700; margin-bottom:8px;">Financial Goals</h3>
+          <p style="color:#6b7280; font-size:0.9rem; line-height:1.6;">
+            Define goals like buying a car or an emergency fund. Track progress with deadlines and contribution logs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#111827; color:#9ca3af; text-align:center; padding:24px; font-size:0.85rem;">
+    © 2026 FinTrack · All data stored locally in your browser · No server, no tracking
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Redirect if already logged in
+    App.redirectIfLoggedIn();
+  </script>
+</body>
+</html>

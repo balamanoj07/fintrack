@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><div class="logo-icon">💰</div> FinTrack</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="expenses.html"  class="nav-item"><span class="nav-icon">💸</span> Expenses</a>
+      <a href="savings.html"   class="nav-item"><span class="nav-icon">🏦</span> Savings</a>
+      <a href="budget.html"    class="nav-item"><span class="nav-icon">📋</span> Budget</a>
+      <a href="goals.html"     class="nav-item"><span class="nav-icon">🎯</span> Goals</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span> Profile</a>
+      <a href="settings.html"  class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay"></div>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Settings</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Preferences Section -->
+      <div class="card" style="margin-bottom:24px;">
+        <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:24px; letter-spacing:-0.5px;">⚙️ Preferences</h3>
+        
+        <!-- Currency -->
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Currency</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Choose your default currency for displaying amounts</div>
+            </div>
+            <select id="currencySelect" class="form-select" style="width:150px;">
+              <option value="₹">₹ INR</option>
+              <option value="$">$ USD</option>
+              <option value="€">€ EUR</option>
+              <option value="£">£ GBP</option>
+              <option value="¥">¥ JPY</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Date Format -->
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Date Format</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">How dates are displayed across the app</div>
+            </div>
+            <select id="dateFormatSelect" class="form-select" style="width:180px;">
+              <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+              <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+              <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Theme -->
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Theme</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Choose your preferred color theme</div>
+            </div>
+            <select id="themeSelect" class="form-select" style="width:150px;">
+              <option value="default">Default</option>
+              <option value="dark" disabled>Dark (Soon)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Budget Alerts</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Show warnings when approaching budget limits</div>
+            </div>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox" id="budgetAlerts" style="width:20px; height:20px; cursor:pointer;" checked />
+              <span style="font-weight:600; font-size:0.9rem;">Enabled</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Management Section -->
+      <div class="card" style="margin-bottom:24px;">
+        <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:24px; letter-spacing:-0.5px;">💾 Data Management</h3>
+        
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Export All Data</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Download your complete financial data as JSON</div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportAllData()">
+              📥 Export
+            </button>
+          </div>
+        </div>
+
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Import Data</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Restore data from a previous export</div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" onclick="document.getElementById('importFile').click()">
+              📤 Import
+            </button>
+            <input type="file" id="importFile" accept=".json" style="display:none;" />
+          </div>
+        </div>
+
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Storage Used</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Local browser storage (all data stays private)</div>
+            </div>
+            <div style="text-align:right;">
+              <div id="storageUsed" style="font-weight:700; font-size:1.1rem; color:var(--primary-dark);">0 KB</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">of ~5 MB available</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px; color:var(--danger);">Clear All Data</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Permanently delete all transactions, budgets, and goals</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="App.openModal('clearDataModal')">
+              🗑 Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Section -->
+      <div class="card" style="margin-bottom:24px;">
+        <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:24px; letter-spacing:-0.5px;">🔒 Security</h3>
+        
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Change Password</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">Update your account password</div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" onclick="App.openModal('changePasswordModal')">
+              🔑 Change
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Data Privacy</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary); max-width:500px; line-height:1.6;">
+                All your financial data is stored locally in your browser. Nothing is sent to any server. 
+                Your data is 100% private and under your control.
+              </div>
+            </div>
+            <span class="badge badge-green">✓ Private</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="card">
+        <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:24px; letter-spacing:-0.5px;">ℹ️ About</h3>
+        
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Version</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">FinTrack Personal Finance Tracker</div>
+            </div>
+            <span class="badge badge-blue">v1.0.0</span>
+          </div>
+        </div>
+
+        <div style="border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px;">
+          <div>
+            <div style="font-weight:700; font-size:0.95rem; margin-bottom:8px;">Features</div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px;">
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ Income & Expense Tracking</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ Savings Accounts</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ Monthly Budgets</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ Financial Goals</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ Data Export/Import</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary);">✓ 100% Private & Local</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:8px;">Links</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="#" class="btn btn-ghost btn-sm">📖 Documentation</a>
+            <a href="#" class="btn btn-ghost btn-sm">🐛 Report Bug</a>
+            <a href="#" class="btn btn-ghost btn-sm">💡 Request Feature</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="changePasswordModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Change Password</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password" />
+        <div class="form-error" id="currentPassError">Current password is incorrect.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input type="password" id="newPassword" class="form-input" placeholder="Enter new password" />
+        <div class="form-error" id="newPassError">Password must be at least 6 characters.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm New Password</label>
+        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password" />
+        <div class="form-error" id="confirmPassError">Passwords do not match.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('changePasswordModal')">Cancel</button>
+      <button class="btn btn-primary" id="changePasswordBtn">Change Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR DATA MODAL -->
+<div class="modal-overlay" id="clearDataModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Clear All Data</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary); margin-bottom:16px;">
+        <strong style="color:var(--danger);">Warning:</strong> This will permanently delete:
+      </p>
+      <ul style="list-style:disc; padding-left:24px; color:var(--text-secondary); margin-bottom:16px;">
+        <li>All transactions</li>
+        <li>All savings accounts</li>
+        <li>All budgets</li>
+        <li>All financial goals</li>
+      </ul>
+      <p style="color:var(--text-secondary); font-weight:600;">Your account will remain active. This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('clearDataModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmClearDataBtn">Clear Everything</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  // Load settings
+  function loadSettings() {
+    const settings = App.get('ft_settings', {
+      currency: '₹',
+      dateFormat: 'DD/MM/YYYY',
+      theme: 'default',
+      budgetAlerts: true
+    });
+
+    document.getElementById('currencySelect').value = settings.currency || '₹';
+    document.getElementById('dateFormatSelect').value = settings.dateFormat || 'DD/MM/YYYY';
+    document.getElementById('themeSelect').value = settings.theme || 'default';
+    document.getElementById('budgetAlerts').checked = settings.budgetAlerts !== false;
+
+    // Calculate storage
+    let totalSize = 0;
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        totalSize += localStorage[key].length + key.length;
+      }
+    }
+    const sizeKB = (totalSize / 1024).toFixed(2);
+    document.getElementById('storageUsed').textContent = sizeKB + ' KB';
+  }
+
+  // Save settings
+  function saveSettings() {
+    const settings = {
+      currency: document.getElementById('currencySelect').value,
+      dateFormat: document.getElementById('dateFormatSelect').value,
+      theme: document.getElementById('themeSelect').value,
+      budgetAlerts: document.getElementById('budgetAlerts').checked
+    };
+    App.set('ft_settings', settings);
+    App.showToast('Settings saved!', 'success');
+  }
+
+  // Auto-save on change
+  document.getElementById('currencySelect').addEventListener('change', saveSettings);
+  document.getElementById('dateFormatSelect').addEventListener('change', saveSettings);
+  document.getElementById('themeSelect').addEventListener('change', saveSettings);
+  document.getElementById('budgetAlerts').addEventListener('change', saveSettings);
+
+  // Export data
+  function exportAllData() {
+    const user = App.currentUser();
+    const data = {
+      profile: user,
+      transactions: Finance.getTransactions(),
+      savings: Finance.getSavingAccounts(),
+      budgets: Finance.getBudgets(),
+      goals: Finance.getGoals(),
+      settings: App.get('ft_settings', {}),
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fintrack-backup-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    App.showToast('Data exported successfully!', 'success');
+  }
+
+  // Import data
+  document.getElementById('importFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        const user = App.currentUser();
+        
+        // Import data
+        if (data.transactions) {
+          App.set(`ft_transactions_${user.email}`, data.transactions);
+        }
+        if (data.savings) {
+          App.set(`ft_savings_${user.email}`, data.savings);
+        }
+        if (data.budgets) {
+          App.set(`ft_budgets_${user.email}`, data.budgets);
+        }
+        if (data.goals) {
+          App.set(`ft_goals_${user.email}`, data.goals);
+        }
+        if (data.settings) {
+          App.set('ft_settings', data.settings);
+        }
+
+        App.showToast('Data imported successfully!', 'success');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err) {
+        App.showToast('Invalid file format', 'error');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // Change password
+  document.getElementById('changePasswordBtn').addEventListener('click', () => {
+    const current = document.getElementById('currentPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    const user = App.currentUser();
+    const users = App.get('ft_users', {});
+    const userData = users[user.email];
+
+    let valid = true;
+
+    if (userData.password !== btoa(current)) {
+      document.getElementById('currentPassError').classList.add('visible');
+      valid = false;
+    } else {
+      document.getElementById('currentPassError').classList.remove('visible');
+    }
+
+    if (newPass.length < 6) {
+      document.getElementById('newPassError').classList.add('visible');
+      valid = false;
+    } else {
+      document.getElementById('newPassError').classList.remove('visible');
+    }
+
+    if (newPass !== confirm) {
+      document.getElementById('confirmPassError').classList.add('visible');
+      valid = false;
+    } else {
+      document.getElementById('confirmPassError').classList.remove('visible');
+    }
+
+    if (!valid) return;
+
+    users[user.email].password = btoa(newPass);
+    App.set('ft_users', users);
+    App.closeModal('changePasswordModal');
+    App.showToast('Password changed successfully!', 'success');
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+  });
+
+  // Clear all data
+  document.getElementById('confirmClearDataBtn').addEventListener('click', () => {
+    if (!confirm('Type CLEAR to confirm')) return;
+    
+    const user = App.currentUser();
+    localStorage.removeItem(`ft_transactions_${user.email}`);
+    localStorage.removeItem(`ft_savings_${user.email}`);
+    localStorage.removeItem(`ft_budgets_${user.email}`);
+    localStorage.removeItem(`ft_goals_${user.email}`);
+    
+    App.closeModal('clearDataModal');
+    App.showToast('All data cleared', 'success');
+    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+  });
+
+  loadSettings();
+</script>
+</body>
+</html>

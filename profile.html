@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><div class="logo-icon">💰</div> FinTrack</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="expenses.html"  class="nav-item"><span class="nav-icon">💸</span> Expenses</a>
+      <a href="savings.html"   class="nav-item"><span class="nav-icon">🏦</span> Savings</a>
+      <a href="budget.html"    class="nav-item"><span class="nav-icon">📋</span> Budget</a>
+      <a href="goals.html"     class="nav-item"><span class="nav-icon">🎯</span> Goals</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span> Profile</a>
+      <a href="settings.html"  class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay"></div>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Profile</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-outline-primary btn-sm" onclick="App.openModal('editProfileModal')">✏️ Edit Profile</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Profile Header Card -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+          <div class="user-avatar" style="width:80px; height:80px; font-size:2rem;" id="profileAvatar">U</div>
+          <div style="flex:1; min-width:200px;">
+            <h2 style="font-size:1.8rem; font-weight:800; margin-bottom:4px; letter-spacing:-0.5px;" id="profileName">User Name</h2>
+            <p style="color:var(--text-secondary); font-size:0.95rem; margin-bottom:8px;" id="profileEmail">user@email.com</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <span class="badge badge-blue">Active Member</span>
+              <span class="badge badge-gray" id="memberSince">Member since 2026</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Account Status</div>
+            <div style="font-size:1.2rem; font-weight:700; color:var(--success);">✓ Verified</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid" style="margin-bottom:32px;">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Transactions</span>
+            <div class="stat-icon purple">📊</div>
+          </div>
+          <div class="stat-value" id="totalTransactions">0</div>
+          <div class="stat-change">All time activity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Active Goals</span>
+            <div class="stat-icon blue">🎯</div>
+          </div>
+          <div class="stat-value" id="activeGoals">0</div>
+          <div class="stat-change">In progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Savings Accounts</span>
+            <div class="stat-icon green">🏦</div>
+          </div>
+          <div class="stat-value" id="savingsCount">0</div>
+          <div class="stat-change">Active accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Budget Categories</span>
+            <div class="stat-icon yellow">📋</div>
+          </div>
+          <div class="stat-value" id="budgetCount">0</div>
+          <div class="stat-change">Tracked monthly</div>
+        </div>
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="grid-2" style="margin-bottom:24px;">
+        <div class="card">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:20px;">Financial Overview</h3>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; justify-content:space-between; padding:12px; background:var(--success-light); border-radius:var(--radius);">
+              <span style="font-weight:600; color:var(--success);">Total Income</span>
+              <span style="font-weight:800; font-size:1.1rem; color:var(--success);" id="summaryIncome">₹0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:12px; background:var(--danger-light); border-radius:var(--radius);">
+              <span style="font-weight:600; color:var(--danger);">Total Expenses</span>
+              <span style="font-weight:800; font-size:1.1rem; color:var(--danger);" id="summaryExpense">₹0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:12px; background:var(--primary-light); border-radius:var(--radius);">
+              <span style="font-weight:600; color:var(--primary-dark);">Net Balance</span>
+              <span style="font-weight:800; font-size:1.1rem; color:var(--primary-dark);" id="summaryBalance">₹0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(167,139,250,0.1); border-radius:var(--radius);">
+              <span style="font-weight:600; color:var(--purple);">Total Savings</span>
+              <span style="font-weight:800; font-size:1.1rem; color:var(--purple);" id="summarySavings">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:20px;">Account Information</h3>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Email Address</div>
+              <div style="font-weight:600;" id="infoEmail">user@email.com</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Member Since</div>
+              <div style="font-weight:600;" id="infoMemberSince">January 2026</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Data Storage</div>
+              <div style="font-weight:600;">Local Browser (Private)</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Last Activity</div>
+              <div style="font-weight:600;" id="infoLastActivity">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card">
+        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:20px;">Quick Actions</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+          <button class="btn btn-outline-primary w-full" onclick="App.openModal('editProfileModal')">
+            ✏️ Edit Profile
+          </button>
+          <a href="settings.html" class="btn btn-outline-primary w-full">
+            ⚙️ Settings
+          </a>
+          <button class="btn btn-outline-primary w-full" onclick="exportData()">
+            📥 Export Data
+          </button>
+          <button class="btn btn-danger w-full" onclick="confirmDeleteAccount()">
+            🗑 Delete Account
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Profile</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="editName" class="form-input" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="editEmail" class="form-input" readonly style="background:#f9fafb; cursor:not-allowed;" />
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Email cannot be changed</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('editProfileModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="deleteAccountModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Delete Account</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary); margin-bottom:16px;">
+        <strong style="color:var(--danger);">Warning:</strong> This will permanently delete your account and all associated data including:
+      </p>
+      <ul style="list-style:disc; padding-left:24px; color:var(--text-secondary); margin-bottom:16px;">
+        <li>All transactions (income & expenses)</li>
+        <li>Savings accounts and history</li>
+        <li>Budget configurations</li>
+        <li>Financial goals</li>
+      </ul>
+      <p style="color:var(--text-secondary); font-weight:600;">This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('deleteAccountModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteAccountBtn">Delete Everything</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  function loadProfile() {
+    const user = App.currentUser();
+    if (!user) return;
+
+    // Profile header
+    document.getElementById('profileName').textContent = user.name;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('infoEmail').textContent = user.email;
+
+    // Edit modal
+    document.getElementById('editName').value = user.name;
+    document.getElementById('editEmail').value = user.email;
+
+    // Member since
+    const users = App.get('ft_users', {});
+    const userData = users[user.email];
+    if (userData && userData.createdAt) {
+      const date = new Date(userData.createdAt);
+      const monthYear = date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+      document.getElementById('memberSince').textContent = `Member since ${monthYear}`;
+      document.getElementById('infoMemberSince').textContent = monthYear;
+    }
+
+    // Stats
+    const txns = Finance.getTransactions();
+    const goals = Finance.getGoals();
+    const savings = Finance.getSavingAccounts();
+    const budgets = Finance.getBudgets();
+    const summary = Finance.getSummary();
+    const totalSavings = Finance.getTotalSavings();
+
+    document.getElementById('totalTransactions').textContent = txns.length;
+    document.getElementById('activeGoals').textContent = goals.filter(g => g.current < g.target).length;
+    document.getElementById('savingsCount').textContent = savings.length;
+    document.getElementById('budgetCount').textContent = budgets.length;
+
+    // Financial summary
+    document.getElementById('summaryIncome').textContent = App.formatCurrency(summary.income);
+    document.getElementById('summaryExpense').textContent = App.formatCurrency(summary.expenses);
+    document.getElementById('summaryBalance').textContent = App.formatCurrency(summary.balance);
+    document.getElementById('summarySavings').textContent = App.formatCurrency(totalSavings);
+
+    // Last activity
+    document.getElementById('infoLastActivity').textContent = new Date().toLocaleString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  function exportData() {
+    const user = App.currentUser();
+    const data = {
+      profile: user,
+      transactions: Finance.getTransactions(),
+      savings: Finance.getSavingAccounts(),
+      budgets: Finance.getBudgets(),
+      goals: Finance.getGoals(),
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fintrack-export-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    App.showToast('Data exported successfully!', 'success');
+  }
+
+  function confirmDeleteAccount() {
+    App.openModal('deleteAccountModal');
+  }
+
+  document.getElementById('saveProfileBtn').addEventListener('click', () => {
+    const newName = document.getElementById('editName').value.trim();
+    if (!newName) {
+      App.showToast('Name cannot be empty', 'error');
+      return;
+    }
+
+    const user = App.currentUser();
+    const users = App.get('ft_users', {});
+    users[user.email].name = newName;
+    App.set('ft_users', users);
+    App.set('ft_session', { email: user.email, name: newName });
+    
+    App.closeModal('editProfileModal');
+    App.showToast('Profile updated!', 'success');
+    loadProfile();
+    App.populateUserInfo();
+  });
+
+  document.getElementById('confirmDeleteAccountBtn').addEventListener('click', () => {
+    const user = App.currentUser();
+    if (!confirm('Type DELETE to confirm account deletion')) return;
+    
+    // Remove all user data
+    const users = App.get('ft_users', {});
+    delete users[user.email];
+    App.set('ft_users', users);
+    
+    // Clear all finance data
+    localStorage.removeItem(`ft_transactions_${user.email}`);
+    localStorage.removeItem(`ft_savings_${user.email}`);
+    localStorage.removeItem(`ft_budgets_${user.email}`);
+    localStorage.removeItem(`ft_goals_${user.email}`);
+    
+    App.showToast('Account deleted', 'success');
+    setTimeout(() => App.logout(), 1000);
+  });
+
+  loadProfile();
+</script>
+</body>
+</html>

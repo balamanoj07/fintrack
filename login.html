@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="logo-icon">💰</div>
+      FinTrack
+    </div>
+
+    <!-- Card -->
+    <div class="auth-card">
+      <h2>Welcome back</h2>
+      <p class="subtitle">Log in to your account to continue</p>
+
+      <form id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <div class="input-group">
+            <span class="input-icon">✉</span>
+            <input
+              type="email"
+              id="email"
+              class="form-input"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+          <div class="form-error" id="emailError">Please enter a valid email.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">
+            Password
+          </label>
+          <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+            <span class="input-suffix" id="togglePassword" title="Show/hide password">👁</span>
+          </div>
+          <div class="form-error" id="passwordError">Password is required.</div>
+        </div>
+
+        <div id="formError" class="form-error" style="margin-bottom:12px; font-size:0.85rem; padding:10px 14px; background:#fef2f2; border-radius:6px; border:1px solid #fecaca;"></div>
+
+        <button type="submit" class="btn btn-primary w-full" style="margin-top:4px;" id="submitBtn">
+          Log In
+        </button>
+
+      </form>
+
+      <div class="form-divider">or</div>
+
+      <a href="register.html" class="btn btn-outline-primary w-full">
+        Create a new account
+      </a>
+    </div>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="register.html">Sign up free</a>
+    </div>
+
+    <div style="text-align:center; margin-top:12px;">
+      <a href="index.html" style="font-size:0.8rem; color:#9ca3af;">← Back to home</a>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    App.redirectIfLoggedIn();
+
+    const form        = document.getElementById('loginForm');
+    const emailInput  = document.getElementById('email');
+    const passInput   = document.getElementById('password');
+    const emailErr    = document.getElementById('emailError');
+    const passErr     = document.getElementById('passwordError');
+    const formErr     = document.getElementById('formError');
+    const submitBtn   = document.getElementById('submitBtn');
+    const togglePass  = document.getElementById('togglePassword');
+
+    // Show/hide password
+    togglePass.addEventListener('click', () => {
+      const isText = passInput.type === 'text';
+      passInput.type = isText ? 'password' : 'text';
+      togglePass.textContent = isText ? '👁' : '🙈';
+    });
+
+    // Clear errors on input
+    emailInput.addEventListener('input', () => {
+      emailErr.classList.remove('visible');
+      emailInput.classList.remove('error');
+      formErr.classList.remove('visible');
+    });
+    passInput.addEventListener('input', () => {
+      passErr.classList.remove('visible');
+      passInput.classList.remove('error');
+      formErr.classList.remove('visible');
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      const email    = emailInput.value.trim();
+      const password = passInput.value;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailErr.classList.add('visible');
+        emailInput.classList.add('error');
+        valid = false;
+      }
+      if (!password) {
+        passErr.classList.add('visible');
+        passInput.classList.add('error');
+        valid = false;
+      }
+      if (!valid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Logging in…';
+
+      setTimeout(() => {
+        const result = App.login(email, password);
+        if (result.ok) {
+          App.showToast('Logged in successfully!', 'success');
+          setTimeout(() => window.location.href = 'dashboard.html', 500);
+        } else {
+          formErr.textContent = result.msg;
+          formErr.classList.add('visible');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Log In';
+        }
+      }, 400);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goals – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><div class="logo-icon">💰</div> FinTrack</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="expenses.html"  class="nav-item"><span class="nav-icon">💸</span> Expenses</a>
+      <a href="savings.html"   class="nav-item"><span class="nav-icon">🏦</span> Savings</a>
+      <a href="budget.html"    class="nav-item"><span class="nav-icon">📋</span> Budget</a>
+      <a href="goals.html"     class="nav-item"><span class="nav-icon">🎯</span> Goals</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay"></div>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Financial Goals</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="App.openModal('addGoalModal')">+ New Goal</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Summary -->
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:24px;">
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Goals</span><div class="stat-icon blue">🎯</div></div>
+          <div class="stat-value" id="totalGoals">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Completed</span><div class="stat-icon green">✓</div></div>
+          <div class="stat-value" id="completedGoals">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Target</span><div class="stat-icon yellow">📈</div></div>
+          <div class="stat-value" id="totalTarget">₹0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Saved</span><div class="stat-icon green">💰</div></div>
+          <div class="stat-value" id="totalSavedGoals">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- Goals grid -->
+      <div id="goalsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;"></div>
+
+      <div id="goalsEmpty" class="empty-state card" style="display:none;">
+        <div class="empty-icon">🎯</div>
+        <h3>No goals yet</h3>
+        <p>Set a financial goal — like an emergency fund, vacation, or down payment — and track your progress here.</p>
+        <button class="btn btn-primary" onclick="App.openModal('addGoalModal')">+ New Goal</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD GOAL MODAL -->
+<div class="modal-overlay" id="addGoalModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Financial Goal</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Goal Name *</label>
+        <input type="text" id="goalName" class="form-input" placeholder="e.g. Emergency Fund" maxlength="60" />
+        <div class="form-error" id="goalNameErr">Please enter a goal name.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select id="goalCategory" class="form-select">
+          <option value="Emergency Fund">Emergency Fund</option>
+          <option value="Vacation">Vacation</option>
+          <option value="Home">Home / Property</option>
+          <option value="Vehicle">Vehicle</option>
+          <option value="Education">Education</option>
+          <option value="Retirement">Retirement</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Business">Business</option>
+          <option value="Gadget">Gadget / Electronics</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Target Amount (₹) *</label>
+          <div class="input-group">
+            <span class="input-icon">₹</span>
+            <input type="number" id="goalTarget" class="form-input" placeholder="0.00" min="1" step="0.01" />
+          </div>
+          <div class="form-error" id="goalTargetErr">Enter a valid target.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Saved So Far (₹)</label>
+          <div class="input-group">
+            <span class="input-icon">₹</span>
+            <input type="number" id="goalCurrent" class="form-input" placeholder="0.00" min="0" step="0.01" />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        <input type="date" id="goalDeadline" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" id="goalDesc" class="form-input" placeholder="Optional note…" maxlength="100" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('addGoalModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveGoalBtn">Create Goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRIBUTE MODAL -->
+<div class="modal-overlay" id="contributeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Contribution</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="contributeGoalId" />
+      <p id="contributeGoalName" style="font-weight:700; font-size:1rem; margin-bottom:16px; color:#111827;"></p>
+      <div class="form-group">
+        <label class="form-label">Amount to Add (₹) *</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="contributeAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01" />
+        </div>
+        <div class="form-error" id="contributeAmtErr">Enter a valid amount.</div>
+      </div>
+      <div id="contributeProgress" style="margin-top:4px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('contributeModal')">Cancel</button>
+      <button class="btn btn-success" id="saveContributeBtn">Add Amount</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE GOAL MODAL -->
+<div class="modal-overlay" id="deleteGoalModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Delete Goal</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#6b7280;">Are you sure you want to delete this goal? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('deleteGoalModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteGoalBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  let pendingDeleteGoalId = null;
+
+  const GOAL_ICONS = {
+    'Emergency Fund': '🛡',
+    'Vacation': '✈',
+    'Home': '🏠',
+    'Vehicle': '🚗',
+    'Education': '🎓',
+    'Retirement': '🌅',
+    'Wedding': '💍',
+    'Business': '💼',
+    'Gadget': '📱',
+    'Other': '🎯'
+  };
+
+  function render() {
+    const goals = Finance.getGoals();
+    const total       = goals.length;
+    const completed   = goals.filter(g => g.current >= g.target).length;
+    const totalTarget = goals.reduce((s,g) => s + parseFloat(g.target), 0);
+    const totalSaved  = goals.reduce((s,g) => s + parseFloat(g.current), 0);
+
+    document.getElementById('totalGoals').textContent      = total;
+    document.getElementById('completedGoals').textContent  = completed;
+    document.getElementById('totalTarget').textContent     = App.formatCurrency(totalTarget);
+    document.getElementById('totalSavedGoals').textContent = App.formatCurrency(totalSaved);
+
+    const grid  = document.getElementById('goalsGrid');
+    const empty = document.getElementById('goalsEmpty');
+
+    if (goals.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'flex';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = goals.map(g => {
+      const p     = Finance.getGoalProgress(g);
+      const done  = g.current >= g.target;
+      const color = done ? 'green' : p.pct >= 60 ? 'blue' : 'yellow';
+      const icon  = GOAL_ICONS[g.category] || '🎯';
+
+      let deadlineHtml = '';
+      if (g.deadline) {
+        const dl = new Date(g.deadline);
+        if (done) {
+          deadlineHtml = `<span class="badge badge-green">🎉 Goal reached!</span>`;
+        } else if (p.daysLeft < 0) {
+          deadlineHtml = `<span class="badge badge-red">Deadline passed</span>`;
+        } else if (p.daysLeft <= 30) {
+          deadlineHtml = `<span class="badge badge-yellow">⏰ ${p.daysLeft} days left</span>`;
+        } else {
+          deadlineHtml = `<span class="badge badge-gray">📅 ${dl.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</span>`;
+        }
+      } else if (done) {
+        deadlineHtml = `<span class="badge badge-green">🎉 Goal reached!</span>`;
+      }
+
+      // Monthly required
+      let monthlyHtml = '';
+      if (!done && g.deadline && p.daysLeft > 0) {
+        const months   = Math.max(1, Math.ceil(p.daysLeft / 30));
+        const monthly  = p.remaining / months;
+        monthlyHtml = `<div style="font-size:0.78rem; color:#6b7280; margin-top:4px;">
+          Need ~${App.formatCurrency(monthly)}/month to reach goal on time
+        </div>`;
+      }
+
+      return `
+        <div class="card" style="display:flex; flex-direction:column; gap:16px; position:relative; ${done ? 'border-color:#bbf7d0;' : ''}">
+          ${done ? '<div style="position:absolute;top:12px;right:12px;font-size:1.4rem;">🏆</div>' : ''}
+
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:${done?'#f0fdf4':'#eff6ff'}; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">
+              ${icon}
+            </div>
+            <div style="flex:1; min-width:0; padding-right:${done?'28px':'0'};">
+              <div style="font-size:1rem; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${g.name}</div>
+              <div style="font-size:0.75rem; color:#9ca3af;">${g.category}${g.description ? ' · ' + g.description : ''}</div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+              <span style="font-size:1.5rem; font-weight:800; color:#111827; letter-spacing:-0.3px;">
+                ${App.formatCurrency(g.current)}
+              </span>
+              <span style="font-size:0.85rem; color:#9ca3af;">of ${App.formatCurrency(g.target)}</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar ${color}" style="width:${p.pct}%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <span style="font-size:0.75rem; color:#9ca3af;">${p.pct.toFixed(1)}% complete</span>
+              ${deadlineHtml}
+            </div>
+            ${monthlyHtml}
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-success btn-sm w-full" onclick="openContribute(${g.id})" ${done ? 'disabled' : ''}>
+              + Contribute
+            </button>
+            <button class="btn btn-ghost btn-sm" style="color:#dc2626; flex-shrink:0;" onclick="deleteGoal(${g.id})" title="Delete">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function openContribute(id) {
+    const g = Finance.getGoals().find(g => g.id === id);
+    if (!g) return;
+    const p = Finance.getGoalProgress(g);
+    document.getElementById('contributeGoalId').value    = id;
+    document.getElementById('contributeGoalName').textContent = g.name;
+    document.getElementById('contributeAmount').value    = '';
+    document.getElementById('contributeAmtErr').classList.remove('visible');
+    document.getElementById('contributeProgress').innerHTML = `
+      <div style="font-size:0.85rem; color:#6b7280;">
+        Current: <strong>${App.formatCurrency(g.current)}</strong> /
+        Target: <strong>${App.formatCurrency(g.target)}</strong> ·
+        Remaining: <strong style="color:#2563eb;">${App.formatCurrency(p.remaining)}</strong>
+      </div>`;
+    App.openModal('contributeModal');
+  }
+
+  function deleteGoal(id) {
+    pendingDeleteGoalId = id;
+    App.openModal('deleteGoalModal');
+  }
+
+  document.getElementById('saveGoalBtn').addEventListener('click', () => {
+    const name     = document.getElementById('goalName').value.trim();
+    const category = document.getElementById('goalCategory').value;
+    const target   = parseFloat(document.getElementById('goalTarget').value);
+    const current  = parseFloat(document.getElementById('goalCurrent').value) || 0;
+    const deadline = document.getElementById('goalDeadline').value;
+    const desc     = document.getElementById('goalDesc').value.trim();
+    let valid = true;
+
+    if (!name) {
+      document.getElementById('goalNameErr').classList.add('visible');
+      document.getElementById('goalName').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('goalNameErr').classList.remove('visible');
+      document.getElementById('goalName').classList.remove('error');
+    }
+    if (!target || target <= 0) {
+      document.getElementById('goalTargetErr').classList.add('visible');
+      document.getElementById('goalTarget').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('goalTargetErr').classList.remove('visible');
+      document.getElementById('goalTarget').classList.remove('error');
+    }
+    if (!valid) return;
+
+    Finance.addGoal({ name, category, target, current, deadline, description: desc });
+    App.closeModal('addGoalModal');
+    App.showToast('Goal created!', 'success');
+    ['goalName','goalTarget','goalCurrent','goalDeadline','goalDesc'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    render();
+  });
+
+  document.getElementById('saveContributeBtn').addEventListener('click', () => {
+    const id     = parseInt(document.getElementById('contributeGoalId').value);
+    const amount = parseFloat(document.getElementById('contributeAmount').value);
+    if (!amount || amount <= 0) {
+      document.getElementById('contributeAmtErr').classList.add('visible');
+      return;
+    }
+    document.getElementById('contributeAmtErr').classList.remove('visible');
+    Finance.contributeToGoal(id, amount);
+
+    // Check if goal is now complete
+    const g = Finance.getGoals().find(g => g.id === id);
+    App.closeModal('contributeModal');
+    if (g && g.current >= g.target) {
+      App.showToast('🎉 Goal reached! Congratulations!', 'success', 4000);
+    } else {
+      App.showToast('Contribution added!', 'success');
+    }
+    render();
+  });
+
+  document.getElementById('confirmDeleteGoalBtn').addEventListener('click', () => {
+    if (pendingDeleteGoalId) {
+      Finance.deleteGoal(pendingDeleteGoalId);
+      pendingDeleteGoalId = null;
+      App.closeModal('deleteGoalModal');
+      App.showToast('Goal deleted.', 'success');
+      render();
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>

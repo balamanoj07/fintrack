@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Savings – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><div class="logo-icon">💰</div> FinTrack</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="expenses.html"  class="nav-item"><span class="nav-icon">💸</span> Expenses</a>
+      <a href="savings.html"   class="nav-item"><span class="nav-icon">🏦</span> Savings</a>
+      <a href="budget.html"    class="nav-item"><span class="nav-icon">📋</span> Budget</a>
+      <a href="goals.html"     class="nav-item"><span class="nav-icon">🎯</span> Goals</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay"></div>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Savings</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="App.openModal('addAccountModal')">+ New Savings Account</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Total savings stat -->
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:24px;">
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Saved</span><div class="stat-icon green">🏦</div></div>
+          <div class="stat-value" id="totalSaved">₹0.00</div>
+          <div class="stat-change">Across all accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Accounts</span><div class="stat-icon blue">📂</div></div>
+          <div class="stat-value" id="accountCount">0</div>
+          <div class="stat-change">Active savings accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Savings Rate</span><div class="stat-icon yellow">📈</div></div>
+          <div class="stat-value" id="savingsRate">0%</div>
+          <div class="stat-change">Savings ÷ Total income</div>
+        </div>
+      </div>
+
+      <!-- Accounts grid -->
+      <div id="accountsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;"></div>
+
+      <div id="accountsEmpty" class="empty-state card" style="display:none;">
+        <div class="empty-icon">🏦</div>
+        <h3>No savings accounts yet</h3>
+        <p>Create savings pots to organise and track your money.</p>
+        <button class="btn btn-primary" onclick="App.openModal('addAccountModal')">+ New Savings Account</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD ACCOUNT MODAL -->
+<div class="modal-overlay" id="addAccountModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Savings Account</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Account Name *</label>
+        <input type="text" id="accName" class="form-input" placeholder="e.g. Emergency Fund" maxlength="50" />
+        <div class="form-error" id="accNameErr">Please enter a name.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Amount (₹)</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="accTarget" class="form-input" placeholder="0.00 (optional)" min="0" step="0.01" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opening Balance (₹)</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="accCurrent" class="form-input" placeholder="0.00" min="0" step="0.01" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input type="text" id="accNote" class="form-input" placeholder="Optional description…" maxlength="80" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('addAccountModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveAccountBtn">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOSIT / WITHDRAW MODAL -->
+<div class="modal-overlay" id="txnAccountModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="txnAccountTitle">Deposit</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="txnAccountId" />
+      <input type="hidden" id="txnAccountAction" />
+      <div class="form-group">
+        <label class="form-label">Amount (₹) *</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="txnAccAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01" />
+        </div>
+        <div class="form-error" id="txnAccAmtErr">Enter a valid amount.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input type="text" id="txnAccNote" class="form-input" placeholder="Optional note…" maxlength="80" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('txnAccountModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveTxnAccBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="deleteAccModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Delete Account</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#6b7280;">Are you sure you want to delete this savings account? All its history will be lost.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('deleteAccModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteAccBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  let pendingDeleteAccId = null;
+
+  function render() {
+    const accounts = Finance.getSavingAccounts();
+    const total    = Finance.getTotalSavings();
+    const summary  = Finance.getSummary();
+
+    document.getElementById('totalSaved').textContent  = App.formatCurrency(total);
+    document.getElementById('accountCount').textContent = accounts.length;
+    const rate = summary.income > 0 ? ((total / summary.income) * 100).toFixed(1) : 0;
+    document.getElementById('savingsRate').textContent  = rate + '%';
+
+    const grid  = document.getElementById('accountsGrid');
+    const empty = document.getElementById('accountsEmpty');
+
+    if (accounts.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'flex';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = accounts.map(acc => {
+      const current = parseFloat(acc.current || 0);
+      const target  = parseFloat(acc.target  || 0);
+      const pct     = target > 0 ? Math.min(100, (current / target) * 100) : null;
+      const color   = pct === null ? 'blue' : pct >= 100 ? 'green' : pct >= 60 ? 'blue' : 'yellow';
+      const recentLogs = (acc.logs || []).slice(-3).reverse();
+
+      return `
+        <div class="card" style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between;">
+            <div>
+              <div style="font-size:1rem; font-weight:700; color:#111827;">${acc.name}</div>
+              ${acc.note ? `<div style="font-size:0.78rem; color:#9ca3af; margin-top:2px;">${acc.note}</div>` : ''}
+            </div>
+            <button class="btn btn-ghost btn-sm" style="color:#dc2626; flex-shrink:0;"
+              onclick="deleteAcc(${acc.id})" title="Delete account">🗑</button>
+          </div>
+
+          <div>
+            <div style="font-size:1.6rem; font-weight:800; color:#111827; letter-spacing:-0.5px;">
+              ${App.formatCurrency(current)}
+            </div>
+            ${target > 0 ? `<div style="font-size:0.78rem; color:#9ca3af; margin-top:2px;">Target: ${App.formatCurrency(target)}</div>` : ''}
+          </div>
+
+          ${pct !== null ? `
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <span style="font-size:0.78rem; color:#6b7280;">Progress</span>
+                <span style="font-size:0.78rem; font-weight:700; color:#111827;">${pct.toFixed(1)}%</span>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar ${color}" style="width:${pct}%;"></div>
+              </div>
+              ${pct >= 100
+                ? '<div style="font-size:0.72rem; color:#16a34a; margin-top:4px; font-weight:600;">🎉 Target reached!</div>'
+                : `<div style="font-size:0.72rem; color:#9ca3af; margin-top:4px;">${App.formatCurrency(target - current)} to go</div>`}
+            </div>` : ''}
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-success btn-sm w-full" onclick="openTxnAcc(${acc.id},'deposit')">+ Deposit</button>
+            <button class="btn btn-outline-primary btn-sm w-full" onclick="openTxnAcc(${acc.id},'withdraw')"
+              ${current <= 0 ? 'disabled' : ''}>− Withdraw</button>
+          </div>
+
+          ${recentLogs.length > 0 ? `
+            <div style="border-top:1px solid #f3f4f6; padding-top:12px;">
+              <div style="font-size:0.72rem; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Recent Activity</div>
+              ${recentLogs.map(l => `
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                  <span style="color:${l.type==='deposit'?'#16a34a':'#dc2626'};">
+                    ${l.type==='deposit'?'↑':'↓'} ${l.note || l.type}
+                  </span>
+                  <span style="font-weight:600; color:${l.type==='deposit'?'#16a34a':'#dc2626'};">
+                    ${l.type==='deposit'?'+':'-'}${App.formatCurrency(l.amount)}
+                  </span>
+                </div>`).join('')}
+            </div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  function openTxnAcc(id, action) {
+    document.getElementById('txnAccountId').value     = id;
+    document.getElementById('txnAccountAction').value = action;
+    document.getElementById('txnAccountTitle').textContent = action === 'deposit' ? 'Deposit to Account' : 'Withdraw from Account';
+    document.getElementById('saveTxnAccBtn').textContent   = action === 'deposit' ? 'Deposit' : 'Withdraw';
+    document.getElementById('saveTxnAccBtn').className = `btn ${action==='deposit'?'btn-success':'btn-primary'}`;
+    document.getElementById('txnAccAmount').value = '';
+    document.getElementById('txnAccNote').value   = '';
+    document.getElementById('txnAccAmtErr').classList.remove('visible');
+    App.openModal('txnAccountModal');
+  }
+
+  function deleteAcc(id) {
+    pendingDeleteAccId = id;
+    App.openModal('deleteAccModal');
+  }
+
+  document.getElementById('confirmDeleteAccBtn').addEventListener('click', () => {
+    if (pendingDeleteAccId) {
+      Finance.deleteSavingAccount(pendingDeleteAccId);
+      pendingDeleteAccId = null;
+      App.closeModal('deleteAccModal');
+      App.showToast('Account deleted.', 'success');
+      render();
+    }
+  });
+
+  document.getElementById('saveTxnAccBtn').addEventListener('click', () => {
+    const id     = parseInt(document.getElementById('txnAccountId').value);
+    const action = document.getElementById('txnAccountAction').value;
+    const amount = parseFloat(document.getElementById('txnAccAmount').value);
+    const note   = document.getElementById('txnAccNote').value.trim();
+
+    if (!amount || amount <= 0) {
+      document.getElementById('txnAccAmtErr').classList.add('visible');
+      return;
+    }
+    document.getElementById('txnAccAmtErr').classList.remove('visible');
+
+    if (action === 'deposit') Finance.depositToSaving(id, amount, note);
+    else Finance.withdrawFromSaving(id, amount, note);
+
+    App.closeModal('txnAccountModal');
+    App.showToast(action === 'deposit' ? 'Deposited successfully!' : 'Withdrawn successfully!', 'success');
+    render();
+  });
+
+  document.getElementById('saveAccountBtn').addEventListener('click', () => {
+    const name    = document.getElementById('accName').value.trim();
+    const target  = document.getElementById('accTarget').value;
+    const current = document.getElementById('accCurrent').value;
+    const note    = document.getElementById('accNote').value.trim();
+
+    if (!name) {
+      document.getElementById('accNameErr').classList.add('visible');
+      document.getElementById('accName').classList.add('error');
+      return;
+    }
+    document.getElementById('accNameErr').classList.remove('visible');
+    document.getElementById('accName').classList.remove('error');
+
+    Finance.addSavingAccount({
+      name,
+      target:  target  ? parseFloat(target)  : 0,
+      current: current ? parseFloat(current) : 0,
+      note
+    });
+    App.closeModal('addAccountModal');
+    App.showToast('Savings account created!', 'success');
+    document.getElementById('accName').value = '';
+    document.getElementById('accTarget').value = '';
+    document.getElementById('accCurrent').value = '';
+    document.getElementById('accNote').value = '';
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>

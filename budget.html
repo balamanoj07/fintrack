@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><div class="logo-icon">💰</div> FinTrack</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="expenses.html"  class="nav-item"><span class="nav-icon">💸</span> Expenses</a>
+      <a href="savings.html"   class="nav-item"><span class="nav-icon">🏦</span> Savings</a>
+      <a href="budget.html"    class="nav-item"><span class="nav-icon">📋</span> Budget</a>
+      <a href="goals.html"     class="nav-item"><span class="nav-icon">🎯</span> Goals</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay"></div>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Budget</span>
+      </div>
+      <div class="topbar-right">
+        <!-- Month picker -->
+        <input type="month" id="budgetMonthPicker" class="form-input" style="width:160px; padding:7px 12px;" />
+        <button class="btn btn-primary btn-sm" onclick="App.openModal('addBudgetModal')">+ Add Budget</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Summary bar -->
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:24px;">
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Budgeted</span><div class="stat-icon blue">📋</div></div>
+          <div class="stat-value" id="totalBudgeted">₹0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Total Spent</span><div class="stat-icon red">💸</div></div>
+          <div class="stat-value expense" id="totalSpent">₹0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Remaining</span><div class="stat-icon green">✓</div></div>
+          <div class="stat-value" id="totalRemaining">₹0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header"><span class="stat-label">Over Budget</span><div class="stat-icon red">⚠</div></div>
+          <div class="stat-value expense" id="overBudgetCount">0</div>
+          <div class="stat-change">categories</div>
+        </div>
+      </div>
+
+      <!-- Budget cards -->
+      <div id="budgetGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px;"></div>
+
+      <div id="budgetEmpty" class="empty-state card" style="display:none;">
+        <div class="empty-icon">📋</div>
+        <h3>No budgets set</h3>
+        <p>Set monthly spending limits per category to stay on track.</p>
+        <button class="btn btn-primary" onclick="App.openModal('addBudgetModal')">+ Add Budget</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD BUDGET MODAL -->
+<div class="modal-overlay" id="addBudgetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Budget</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select id="budgetCat" class="form-select">
+          <option value="">Select category</option>
+        </select>
+        <div class="form-error" id="budgetCatErr">Select a category.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monthly Limit (₹) *</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="budgetLimit" class="form-input" placeholder="e.g. 5000" min="1" step="0.01" />
+        </div>
+        <div class="form-error" id="budgetLimitErr">Enter a valid amount.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('addBudgetModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveBudgetBtn">Save Budget</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT BUDGET MODAL -->
+<div class="modal-overlay" id="editBudgetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Budget</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editBudgetId" />
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input type="text" id="editBudgetCat" class="form-input" readonly style="background:#f9fafb;" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Monthly Limit (₹) *</label>
+        <div class="input-group">
+          <span class="input-icon">₹</span>
+          <input type="number" id="editBudgetLimit" class="form-input" min="1" step="0.01" />
+        </div>
+        <div class="form-error" id="editBudgetLimitErr">Enter a valid amount.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('editBudgetModal')">Cancel</button>
+      <button class="btn btn-primary" id="updateBudgetBtn">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE BUDGET MODAL -->
+<div class="modal-overlay" id="deleteBudgetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Remove Budget</span>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#6b7280;">Remove this budget limit? Your expense records won't be affected.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('deleteBudgetModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBudgetBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  let pendingDeleteBudgetId = null;
+
+  // Set month picker default to current month
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('budgetMonthPicker').value = currentMonth;
+
+  // Populate category select
+  function populateBudgetCats() {
+    const existing = Finance.getBudgets().map(b => b.category);
+    const available = Finance.EXPENSE_CATS.filter(c => !existing.includes(c));
+    const sel = document.getElementById('budgetCat');
+    sel.innerHTML = '<option value="">Select category</option>' +
+      available.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
+  function render() {
+    const month   = document.getElementById('budgetMonthPicker').value || currentMonth;
+    const budgets = Finance.getBudgetsWithSpent(month);
+
+    const totalBudgeted  = budgets.reduce((s, b) => s + b.limit, 0);
+    const totalSpent     = budgets.reduce((s, b) => s + b.spent, 0);
+    const totalRemaining = budgets.reduce((s, b) => s + b.remaining, 0);
+    const overCount      = budgets.filter(b => b.pct >= 100).length;
+
+    document.getElementById('totalBudgeted').textContent  = App.formatCurrency(totalBudgeted);
+    document.getElementById('totalSpent').textContent     = App.formatCurrency(totalSpent);
+    document.getElementById('totalRemaining').textContent = App.formatCurrency(totalRemaining);
+    document.getElementById('overBudgetCount').textContent = overCount;
+
+    const grid  = document.getElementById('budgetGrid');
+    const empty = document.getElementById('budgetEmpty');
+
+    if (budgets.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'flex';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = budgets.map(b => {
+      const color  = b.pct >= 100 ? 'red' : b.pct >= 80 ? 'yellow' : 'green';
+      const status = b.pct >= 100
+        ? `<span class="badge badge-red">Over budget</span>`
+        : b.pct >= 80
+          ? `<span class="badge badge-yellow">⚠ Near limit</span>`
+          : `<span class="badge badge-green">On track</span>`;
+
+      return `
+        <div class="card">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;">
+            <div>
+              <div style="font-size:1rem; font-weight:700;">${b.category}</div>
+              <div style="margin-top:4px;">${status}</div>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <button class="btn btn-ghost btn-sm" onclick="editBudget(${b.id})" title="Edit">✏</button>
+              <button class="btn btn-ghost btn-sm" style="color:#dc2626;" onclick="deleteBudget(${b.id})" title="Remove">🗑</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:0.85rem; color:#6b7280;">Spent</span>
+              <span style="font-size:0.85rem; font-weight:700;">${App.formatCurrency(b.spent)} <span style="color:#9ca3af; font-weight:400;">/ ${App.formatCurrency(b.limit)}</span></span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar ${color}" style="width:${b.pct}%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.78rem; color:#9ca3af;">
+              <span>${b.pct.toFixed(1)}% used</span>
+              <span style="color:${b.pct>=100?'#dc2626':'#6b7280'};">
+                ${b.pct >= 100
+                  ? '⚠ Over by ' + App.formatCurrency(b.spent - b.limit)
+                  : App.formatCurrency(b.remaining) + ' left'}
+              </span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function editBudget(id) {
+    const b = Finance.getBudgets().find(b => b.id === id);
+    if (!b) return;
+    document.getElementById('editBudgetId').value    = id;
+    document.getElementById('editBudgetCat').value   = b.category;
+    document.getElementById('editBudgetLimit').value = b.limit;
+    document.getElementById('editBudgetLimitErr').classList.remove('visible');
+    App.openModal('editBudgetModal');
+  }
+
+  function deleteBudget(id) {
+    pendingDeleteBudgetId = id;
+    App.openModal('deleteBudgetModal');
+  }
+
+  document.getElementById('saveBudgetBtn').addEventListener('click', () => {
+    const cat   = document.getElementById('budgetCat').value;
+    const limit = parseFloat(document.getElementById('budgetLimit').value);
+    let valid = true;
+
+    if (!cat) {
+      document.getElementById('budgetCatErr').classList.add('visible');
+      valid = false;
+    } else {
+      document.getElementById('budgetCatErr').classList.remove('visible');
+    }
+    if (!limit || limit <= 0) {
+      document.getElementById('budgetLimitErr').classList.add('visible');
+      valid = false;
+    } else {
+      document.getElementById('budgetLimitErr').classList.remove('visible');
+    }
+    if (!valid) return;
+
+    Finance.addBudget({ category: cat, limit });
+    App.closeModal('addBudgetModal');
+    App.showToast('Budget added!', 'success');
+    document.getElementById('budgetCat').value   = '';
+    document.getElementById('budgetLimit').value = '';
+    populateBudgetCats();
+    render();
+  });
+
+  document.getElementById('updateBudgetBtn').addEventListener('click', () => {
+    const id    = parseInt(document.getElementById('editBudgetId').value);
+    const limit = parseFloat(document.getElementById('editBudgetLimit').value);
+    if (!limit || limit <= 0) {
+      document.getElementById('editBudgetLimitErr').classList.add('visible');
+      return;
+    }
+    document.getElementById('editBudgetLimitErr').classList.remove('visible');
+    Finance.updateBudget(id, { limit });
+    App.closeModal('editBudgetModal');
+    App.showToast('Budget updated!', 'success');
+    render();
+  });
+
+  document.getElementById('confirmDeleteBudgetBtn').addEventListener('click', () => {
+    if (pendingDeleteBudgetId) {
+      Finance.deleteBudget(pendingDeleteBudgetId);
+      pendingDeleteBudgetId = null;
+      App.closeModal('deleteBudgetModal');
+      App.showToast('Budget removed.', 'success');
+      populateBudgetCats();
+      render();
+    }
+  });
+
+  document.getElementById('budgetMonthPicker').addEventListener('change', render);
+
+  populateBudgetCats();
+  render();
+</script>
+</body>
+</html>

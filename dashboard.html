@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – FinTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💰</div>
+        FinTrack
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="expenses.html" class="nav-item">
+        <span class="nav-icon">💸</span> Expenses
+      </a>
+      <a href="savings.html" class="nav-item">
+        <span class="nav-icon">🏦</span> Savings
+      </a>
+      <a href="budget.html" class="nav-item">
+        <span class="nav-icon">📋</span> Budget
+      </a>
+      <a href="goals.html" class="nav-item">
+        <span class="nav-icon">🎯</span> Goals
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-menu" id="logoutBtn" title="Log out">
+        <div class="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name">User</div>
+          <div class="user-email">user@email.com</div>
+        </div>
+        <span style="color:#9ca3af; font-size:0.8rem;">⏻</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="sidebarOverlay"></div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-ghost btn-icon" id="sidebarToggle">☰</button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <span id="topbarDate" style="font-size:0.8rem; color:#6b7280;"></span>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Greeting -->
+      <div style="margin-bottom:24px;">
+        <h1 id="greeting" style="font-size:1.4rem; font-weight:800; color:#111827; letter-spacing:-0.3px;"></h1>
+        <p style="color:#6b7280; font-size:0.875rem; margin-top:4px;">Here's your financial overview</p>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Balance</span>
+            <div class="stat-icon blue">💳</div>
+          </div>
+          <div class="stat-value" id="statBalance">₹0.00</div>
+          <div class="stat-change">Income minus expenses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Income</span>
+            <div class="stat-icon green">↑</div>
+          </div>
+          <div class="stat-value income" id="statIncome">₹0.00</div>
+          <div class="stat-change">All time income recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Expenses</span>
+            <div class="stat-icon red">↓</div>
+          </div>
+          <div class="stat-value expense" id="statExpenses">₹0.00</div>
+          <div class="stat-change">All time expenses recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Savings</span>
+            <div class="stat-icon green">🏦</div>
+          </div>
+          <div class="stat-value" id="statSavings">₹0.00</div>
+          <div class="stat-change">Across all savings accounts</div>
+        </div>
+      </div>
+
+      <!-- ROW: Recent Transactions + Budget Overview -->
+      <div class="grid-2" style="margin-bottom:24px;">
+
+        <!-- Recent Transactions -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recent Transactions</div>
+              <div class="card-subtitle">Last 5 entries</div>
+            </div>
+            <a href="expenses.html" class="btn btn-outline-primary btn-sm">View all</a>
+          </div>
+          <div id="recentList">
+            <div class="empty-state" style="padding:30px 16px;">
+              <div class="empty-icon">📭</div>
+              <p>No transactions yet.<br/>Add your first income or expense.</p>
+              <a href="expenses.html" class="btn btn-primary btn-sm">Add transaction</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget overview -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Budget Status</div>
+              <div class="card-subtitle" id="budgetMonth"></div>
+            </div>
+            <a href="budget.html" class="btn btn-outline-primary btn-sm">Manage</a>
+          </div>
+          <div id="budgetList">
+            <div class="empty-state" style="padding:30px 16px;">
+              <div class="empty-icon">📋</div>
+              <p>No budgets set yet.<br/>Create a budget to track spending.</p>
+              <a href="budget.html" class="btn btn-primary btn-sm">Set budget</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW: Goals + Expense breakdown -->
+      <div class="grid-2">
+
+        <!-- Goals summary -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Financial Goals</div>
+              <div class="card-subtitle">Your progress so far</div>
+            </div>
+            <a href="goals.html" class="btn btn-outline-primary btn-sm">View all</a>
+          </div>
+          <div id="goalsList">
+            <div class="empty-state" style="padding:30px 16px;">
+              <div class="empty-icon">🎯</div>
+              <p>No goals yet.<br/>Set a financial goal to get started.</p>
+              <a href="goals.html" class="btn btn-primary btn-sm">Add goal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expense breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Spending by Category</div>
+              <div class="card-subtitle">All time breakdown</div>
+            </div>
+          </div>
+          <div id="catBreakdown">
+            <div class="empty-state" style="padding:30px 16px;">
+              <div class="empty-icon">📊</div>
+              <p>No expense data yet.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div><!-- /main-content -->
+
+</div><!-- /app-layout -->
+
+<script src="js/app.js"></script>
+<script src="js/finance.js"></script>
+<script>
+  App.initAppPage();
+
+  // Greeting
+  const user = App.currentUser();
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = `${greet}, ${user?.name || 'there'} 👋`;
+
+  // Topbar date
+  document.getElementById('topbarDate').textContent =
+    new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Budget month label
+  document.getElementById('budgetMonth').textContent =
+    new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+
+  // Show mobile toggle on small screens — handled by CSS
+  
+  function renderDashboard() {
+    const data = Finance.getDashboardData();
+
+    // Stats
+    document.getElementById('statBalance').textContent  = App.formatCurrency(data.summary.balance);
+    document.getElementById('statIncome').textContent   = App.formatCurrency(data.summary.income);
+    document.getElementById('statExpenses').textContent = App.formatCurrency(data.summary.expenses);
+    document.getElementById('statSavings').textContent  = App.formatCurrency(data.savings);
+
+    // Balance color
+    const balEl = document.getElementById('statBalance');
+    balEl.style.color = data.summary.balance < 0 ? 'var(--danger)' : 'var(--text-primary)';
+
+    // Recent transactions
+    const recentEl = document.getElementById('recentList');
+    if (data.recent.length === 0) {
+      recentEl.innerHTML = `
+        <div class="empty-state" style="padding:30px 16px;">
+          <div class="empty-icon">📭</div>
+          <p>No transactions yet.<br/>Add your first income or expense.</p>
+          <a href="expenses.html" class="btn btn-primary btn-sm">Add transaction</a>
+        </div>`;
+    } else {
+      recentEl.innerHTML = data.recent.map(t => `
+        <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #f3f4f6;">
+          <div style="width:38px; height:38px; border-radius:10px; background:${t.type==='income'?'#f0fdf4':'#fef2f2'}; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
+            ${t.type === 'income' ? '💵' : '💸'}
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:0.875rem; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${t.description || t.category}</div>
+            <div style="font-size:0.75rem; color:#9ca3af;">${t.category} · ${App.formatDate(t.date ? new Date(t.date).getTime() : t.createdAt)}</div>
+          </div>
+          <div style="font-size:0.9rem; font-weight:700; color:${t.type==='income'?'#16a34a':'#dc2626'}; flex-shrink:0;">
+            ${t.type==='income'?'+':'-'}${App.formatCurrency(t.amount)}
+          </div>
+        </div>`).join('') +
+        `<div style="padding-top:10px; text-align:right;">
+          <a href="expenses.html" style="font-size:0.8rem; color:#2563eb; font-weight:600;">View all transactions →</a>
+        </div>`;
+    }
+
+    // Budget
+    const budgetEl = document.getElementById('budgetList');
+    if (data.budgets.length === 0) {
+      budgetEl.innerHTML = `
+        <div class="empty-state" style="padding:30px 16px;">
+          <div class="empty-icon">📋</div>
+          <p>No budgets set yet.</p>
+          <a href="budget.html" class="btn btn-primary btn-sm">Set budget</a>
+        </div>`;
+    } else {
+      budgetEl.innerHTML = data.budgets.slice(0, 5).map(b => {
+        const color = b.pct >= 90 ? 'red' : b.pct >= 70 ? 'yellow' : 'green';
+        return `
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:0.85rem; font-weight:600;">${b.category}</span>
+              <span style="font-size:0.8rem; color:#6b7280;">${App.formatCurrency(b.spent)} / ${App.formatCurrency(b.limit)}</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar ${color}" style="width:${b.pct}%;"></div>
+            </div>
+            <div style="font-size:0.72rem; color:${b.pct>=100?'#dc2626':'#9ca3af'}; margin-top:3px; text-align:right;">
+              ${b.pct >= 100 ? '⚠ Over budget' : App.formatCurrency(b.remaining) + ' remaining'}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Goals
+    const goalsEl = document.getElementById('goalsList');
+    if (data.goals.length === 0) {
+      goalsEl.innerHTML = `
+        <div class="empty-state" style="padding:30px 16px;">
+          <div class="empty-icon">🎯</div>
+          <p>No goals yet.</p>
+          <a href="goals.html" class="btn btn-primary btn-sm">Add goal</a>
+        </div>`;
+    } else {
+      goalsEl.innerHTML = data.goals.slice(0, 4).map(g => {
+        const p = Finance.getGoalProgress(g);
+        return `
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:0.85rem; font-weight:600;">${g.name}</span>
+              <span class="badge ${p.pct >= 100 ? 'badge-green' : 'badge-blue'}">${p.pct.toFixed(0)}%</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar ${p.pct>=100?'green':'blue'}" style="width:${p.pct}%;"></div>
+            </div>
+            <div style="font-size:0.72rem; color:#9ca3af; margin-top:3px;">
+              ${App.formatCurrency(g.current)} of ${App.formatCurrency(g.target)}
+              ${p.daysLeft !== null ? ` · ${p.daysLeft > 0 ? p.daysLeft + ' days left' : 'Deadline passed'}` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Category breakdown
+    const catEl = document.getElementById('catBreakdown');
+    const cats  = Object.entries(data.catSpend).sort((a,b) => b[1]-a[1]);
+    if (cats.length === 0) {
+      catEl.innerHTML = `
+        <div class="empty-state" style="padding:30px 16px;">
+          <div class="empty-icon">📊</div>
+          <p>No expense data yet.</p>
+        </div>`;
+    } else {
+      const total = cats.reduce((s,[,v]) => s+v, 0);
+      catEl.innerHTML = cats.slice(0, 6).map(([cat, amt]) => {
+        const pct = total > 0 ? (amt/total*100) : 0;
+        return `
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <div style="font-size:0.8rem; font-weight:600; width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:0;">${cat}</div>
+            <div style="flex:1;">
+              <div class="progress-bar-wrap" style="height:6px;">
+                <div class="progress-bar blue" style="width:${pct}%;"></div>
+              </div>
+            </div>
+            <div style="font-size:0.8rem; font-weight:700; color:#111827; flex-shrink:0; width:80px; text-align:right;">${App.formatCurrency(amt)}</div>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  renderDashboard();
+</script>
+</body>
+</html>
